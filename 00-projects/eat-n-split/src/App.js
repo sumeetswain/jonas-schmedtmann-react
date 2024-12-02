@@ -21,6 +21,15 @@ const initialFriends = [
   },
 ];
 
+function Button({ children, onClick, onShowAddFriend, onSelection, friend }) {
+  function handleFunctions() {
+    return friend ? onSelection(friend) : onShowAddFriend();
+  }
+  return (
+    <button className="button" onClick={onClick}>{children}</button>
+  )
+}
+
 export default function App() {
   const [friends, setFriends] = useState(initialFriends)
   const [showAddFriend, setShowAddFriend] = useState(false)
@@ -36,6 +45,8 @@ export default function App() {
   }
   function handleSelection(friend) {
     setSelectedFriend(friend)
+    console.log(friend);
+
   }
   return (
     <div className="app">
@@ -44,7 +55,7 @@ export default function App() {
 
         {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
-        <Button onShowAddFriend={toggleSetShowAddFriend}>{
+        <Button onClick={toggleSetShowAddFriend}>{
           showAddFriend ? "Close" :
             "Add friend"}</Button>
       </div>
@@ -89,14 +100,7 @@ function Friend({ friend, onSelection }) {
     </li>
   )
 }
-function Button({ children, onShowAddFriend, onSelection, friend }) {
-  function handleFunctions() {
-    return friend ? onSelection(friend) : handleClick();
-  }
-  return (
-    <button className="button" onClick={onShowAddFriend}>{children}</button>
-  )
-}
+
 
 function FormAddFriend({ onAddFriend }) {
   const [name, setName] = useState("")
