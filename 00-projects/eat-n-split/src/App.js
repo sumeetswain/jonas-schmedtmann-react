@@ -21,10 +21,8 @@ const initialFriends = [
   },
 ];
 
-function Button({ children, onClick, onShowAddFriend, onSelection, friend }) {
-  function handleFunctions() {
-    return friend ? onSelection(friend) : onShowAddFriend();
-  }
+function Button({ children, onClick }) {
+
   return (
     <button className="button" onClick={onClick}>{children}</button>
   )
@@ -74,7 +72,7 @@ export default function App() {
           showAddFriend ? "Close" :
             "Add friend"}</Button>
       </div>
-      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} onSplitBill={handleSplitBill} />}
+      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} onSplitBill={handleSplitBill} key={selectedFriend.id} />}
     </div>
   );
 }
