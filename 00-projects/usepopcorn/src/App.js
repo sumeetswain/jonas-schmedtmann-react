@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import StarRating from "./StarRating"
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useKey } from "./useKey";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -17,10 +18,7 @@ export default function App() {
 
   const [watched, setWatched] = useLocalStorageState([], "watched")
 
-  // const [watched, setWatched] = useState(function () {
-  //   const storedValue = localStorage.getItem("watched")
-  //   return JSON.parse(storedValue)
-  // });
+
   function handleSelectMovie(id) {
     setSelectedId(selectedId => id === selectedId ? null : id)
   }
@@ -31,18 +29,11 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie])
-
-    // localStorage.setItem("watched", JSON.stringify([...watched, movie]))
   }
 
   function handleDeleteWatched(id) {
     setWatched(watched => watched.filter((movie) => movie.imdbID !== id))
   }
-
-
-
-
-
 
   return (
     <>
@@ -83,11 +74,12 @@ export default function App() {
 function Loader() {
   return <p className="loader"> Loading...</p>
 }
+
 function ErrorMessage({ message }) {
   return <p className="error"><span>🚩</span>{message}</p>
 }
-function Navbar({ children }) {
 
+function Navbar({ children }) {
   return (
     <nav className="nav-bar">
       <Logo />
@@ -95,6 +87,7 @@ function Navbar({ children }) {
     </nav>
   )
 }
+
 function Logo() {
   return (
     <div className="logo">
@@ -103,22 +96,17 @@ function Logo() {
     </div>
   )
 }
+
 function Search({ query, setQuery }) {
 
   const inputEl = useRef(null)
 
-  useEffect(function () {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return
-      if (e.code === "Enter") {
-        inputEl.current.focus()
-        setQuery("")
-      }
+  useKey("enter", function () {
+    if (document.activeElement === inputEl.current) return
+    inputEl.current.focus()
+    setQuery("")
+  })
 
-    }
-    document.addEventListener("keydown", callback)
-    return () => document.addEventListener("keydown", callback)
-  }, [setQuery])
 
   return (
     <input
@@ -227,20 +215,21 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie()
   }
 
-  useEffect(function () {
-    function callback(e) {
-      if (e.code === "Escape")
-        onCloseMovie()
+  useKey("escape", onCloseMovie)
+  // useEffect(function () {
+  //   function callback(e) {
+  //     if (e.code === "Escape")
+  //       onCloseMovie()
 
-    }
+  //   }
 
-    document.addEventListener("keydown", callback)
+  //   document.addEventListener("keydown", callback)
 
-    return function () {
-      document.removeEventListener("keydown", callback)
-    }
-  }
-    , [onCloseMovie])
+  //   return function () {
+  //     document.removeEventListener("keydown", callback)
+  //   }
+  // }
+  //   , [onCloseMovie])
 
   useEffect(function () {
     async function getMovieDetails() {
