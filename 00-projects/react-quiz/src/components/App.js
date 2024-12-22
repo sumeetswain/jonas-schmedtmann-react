@@ -24,7 +24,8 @@ function reducer(state, action) {
 
     case "dataReceived":
       return {
-        ...state, questions: action.payload,
+        ...state,
+        questions: action.payload,
         status: "ready"
       }
 
@@ -35,7 +36,7 @@ function reducer(state, action) {
 
     case "start":
       return {
-        ...state, status: "active"
+        ...state, status: "active",
       }
 
     case "newAnswer":
@@ -53,6 +54,8 @@ function reducer(state, action) {
     case "finish":
       return { ...state, status: "finished", highscore: state.points > state.highscore ? state.points : state.highscore }
 
+    case "restart":
+      return { ...state, status: "active", index: 0, points: 0, answer: null }
     default: throw new Error("action unknown")
 
 
@@ -104,6 +107,7 @@ export default function App(params) {
             points={points}
             maxPoints={maxPoints}
             highscore={highscore}
+            dispatch={dispatch}
           />}
       </Main>
     </div>)
