@@ -71,6 +71,7 @@ export default function App(params) {
               numQuestions={numQuestions}
               points={points}
               maxPoints={maxPoints}
+              answer={answer}
             />
             <Question question={questions[index]} dispatch={dispatch} answer={answer} />
             <NextButton dispatch={dispatch} answer={answer} />
