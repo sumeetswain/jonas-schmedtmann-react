@@ -8,6 +8,8 @@ import Question from "./Question.js"
 import NextButton from "./NextButton.js"
 import Progress from "./Progress.js"
 import FinishScreen from "./FinishScreen.js"
+import Footer from "./Footer.js"
+import Timer from "./Timer.js"
 const initialState = {
   questions: [],
 
@@ -16,7 +18,8 @@ const initialState = {
   index: 0,
   answer: null,
   points: 0,
-  highscore: 0
+  highscore: 0,
+  secondsRemaining: 10
 }
 
 function reducer(state, action) {
@@ -56,6 +59,11 @@ function reducer(state, action) {
 
     case "restart":
       return { ...state, status: "active", index: 0, points: 0, answer: null }
+
+    case "tick":
+      return {
+        ...state, secondsRemaining: state.secondsRemaining - 1
+      }
     default: throw new Error("action unknown")
 
 
@@ -63,7 +71,7 @@ function reducer(state, action) {
 }
 export default function App(params) {
 
-  const [{ questions, status, index, answer, points, highscore }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status, index, answer, points, highscore, secondsRemaining }, dispatch] = useReducer(reducer, initialState)
   const numQuestions = questions.length
   const maxPoints = questions.reduce((prev, cur) => prev + cur.points, 0)
   useEffect(function () {
@@ -93,14 +101,20 @@ export default function App(params) {
               question={questions[index]}
               dispatch={dispatch}
               answer={answer} />
-            <NextButton
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              numQuestions={numQuestions} />
 
+
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions} />
+            </Footer>
 
           </>
+
         }
         {status === "finished" &&
           <FinishScreen
