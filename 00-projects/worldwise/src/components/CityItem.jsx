@@ -16,7 +16,7 @@ const flagEmojiToPNG = (flag) => {
 };
 export default function CityItem({ city }) {
   const { cityName, emoji, date } = city;
-  console.log(city);
+
   return (
     <li className={styles.cityItem}>
       <span className={styles.emoji}>{flagEmojiToPNG(emoji)}</span>
